@@ -355,7 +355,8 @@ and print_formula fmt f =
       (fun (p, v) ->
          match p with
          | Constr {name = n; args = l} ->
-           fprintf fmt "| %a %a -> %a\n" Hstring.print n pp_vars l print_formula v
+           fprintf fmt "| %a %a -> %a\n"
+             Hstring.print n pp_vars l print_formula v
          | Var x ->
            fprintf fmt "| %a -> %a\n" Var.print x print_formula v;
       )cases;
@@ -550,6 +551,7 @@ module Safe = struct
     | Atom _
     | Form _ -> Ty.Safe.prop
 
+
   module Var = struct
 
     type t = {
@@ -640,6 +642,63 @@ module Safe = struct
     let _false =
       make Symbols.False [] [] Ty.Safe.prop
 
+    module Int = struct
+      let add =
+        make Symbols.(Op Plus) [] [Ty.Safe.int; Ty.Safe.int] Ty.Safe.int
+
+      let sub =
+        make Symbols.(Op Minus) [] [Ty.Safe.int; Ty.Safe.int] Ty.Safe.int
+
+      let mul =
+        make Symbols.(Op Mult) [] [Ty.Safe.int; Ty.Safe.int] Ty.Safe.int
+
+      let div =
+        make Symbols.(Op Div) [] [Ty.Safe.int; Ty.Safe.int] Ty.Safe.int
+
+      let modulo =
+        make Symbols.(Op Modulo) [] [Ty.Safe.int; Ty.Safe.int] Ty.Safe.int
+
+      let abs =
+        make Symbols.(Op Abs_int) [] [Ty.Safe.int] Ty.Safe.int
+
+      let lt =
+        make Symbols.(Lit (L_built LT)) [] [Ty.Safe.int; Ty.Safe.int]
+          Ty.Safe.prop
+
+      let le =
+        make Symbols.(Lit (L_built LE)) [] [Ty.Safe.int; Ty.Safe.int]
+          Ty.Safe.prop
+
+      let to_real =
+        make Symbols.(Op Real_of_int) [] [Ty.Safe.int] Ty.Safe.real
+
+    end
+
+    module Real = struct
+      let add =
+        make Symbols.(Op Plus) [] [Ty.Safe.real; Ty.Safe.real] Ty.Safe.real
+
+      let sub =
+        make Symbols.(Op Minus) [] [Ty.Safe.real; Ty.Safe.real] Ty.Safe.real
+
+      let mul =
+        make Symbols.(Op Mult) [] [Ty.Safe.real; Ty.Safe.real] Ty.Safe.real
+
+      let div =
+        make Symbols.(Op Div) [] [Ty.Safe.real; Ty.Safe.real] Ty.Safe.real
+
+      let lt =
+        make Symbols.(Lit (L_built LT)) [] [Ty.Safe.real; Ty.Safe.real]
+          Ty.Safe.prop
+
+      let le =
+        make Symbols.(Lit (L_built LE)) [] [Ty.Safe.real; Ty.Safe.real]
+          Ty.Safe.prop
+
+      let to_int =
+        make Symbols.(Op Int_floor) [] [Ty.Safe.real] Ty.Safe.int
+
+    end
   end
 
   exception Deep_type_quantification
@@ -679,15 +738,48 @@ module Safe = struct
     (* promote_atom guarantees this cannot happen *)
     | Atom _ -> assert false
 
-    let expect_formula t =
-      match expect_prop t with
-      | [], f -> f
-      | _ -> raise Deep_type_quantification
+  let expect_formula t =
+    match expect_prop t with
+    | [], f -> f
+    | _ -> raise Deep_type_quantification
 
   (* Smart constructors:
      Wrappers to build term while checking the well-typedness *)
   let of_var v =
     Term (mk { tt_desc = TTvar v.Var.var; tt_ty = v.Var.ty })
+
+  let _true = Atom (mk TAtrue)
+  let _false = Atom (mk TAfalse)
+
+  let mk_form_op op l =
+    let l_f = List.map expect_formula l in
+    Form (mk (TFop(op, l_f)), [])
+
+  let neg t = mk_form_op OPnot [t]
+  let imply p q = mk_form_op OPimp [p; q]
+  let equiv p q = mk_form_op OPiff [p; q]
+  let xor p q = mk_form_op OPxor [p; q]
+
+  let match_builtin b args =
+    let open Symbols in
+    match b with
+    | LE -> TAle args
+    | LT -> TAlt args
+    | IsConstr _ -> assert false
+
+  let mk_atom l args =
+    let open Symbols in
+    match l with
+    | L_eq -> Atom (mk (TAeq args))
+    | L_built b ->
+      (Atom (mk ((match_builtin b args))))
+    | L_neg_eq -> Atom (mk (TAneq args))
+    | L_neg_built b ->
+      mk_form_op OPnot [Atom (mk ((match_builtin b args)))]
+
+    | L_neg_pred -> match args with
+      | [arg] -> Atom (mk (TApred(arg,true)))
+      | _ -> assert false
 
   let apply c tys args =
     (* check arity *)
@@ -711,23 +803,17 @@ module Safe = struct
           ) args expected_args_ty in
       (* compute the return type and create the resulting term. *)
       let ret_ty = Ty.apply_subst s c.Const.ret in
-      promote_term (Term (
-          mk ({ tt_ty = ret_ty;
-                tt_desc = TTapp (c.Const.symbol, actual_args)})
-        ))
+
+      let open Symbols in
+      match c.Const.symbol with
+      | Lit l ->
+        mk_atom l actual_args
+      | _ ->
+        promote_term (Term (
+            mk ({ tt_ty = ret_ty;
+                  tt_desc = TTapp (c.Const.symbol, actual_args)})
+          ))
     end
-
-  let _true = Atom (mk TAtrue)
-  let _false = Atom (mk TAfalse)
-
-  let mk_form_op op l =
-    let l_f = List.map expect_formula l in
-    Form (mk (TFop(op, l_f)), [])
-
-  let neg t = mk_form_op OPnot [t]
-  let imply p q = mk_form_op OPimp [p; q]
-  let equiv p q = mk_form_op OPiff [p; q]
-  let xor p q = mk_form_op OPxor [p; q]
 
   (* Use a divide and conquer strategy to chain
      application of binary operators to a list of expressions. *)
@@ -962,9 +1048,24 @@ module Safe = struct
     | Form (_, _) -> raise Deep_type_quantification
 
   (* Integers *)
-  let int s =
+  let int s : t =
     Term (mk { tt_ty = Ty.Safe.int;
                tt_desc = TTconst (Tint s); })
+
+  let real s : t =
+    let s = begin match String.split_on_char '.' s with
+      | [n] | [n;""] -> Num.num_of_string n
+      | [n; d] ->
+        let l = String.length d in
+        let n = if (String.length n) = 0 then Num.Int 0
+          else Num.num_of_string n in
+        let d = Num.num_of_string d in
+        let e = Num.power_num (Num.Int 10) (Num.Int l) in
+        Num.add_num n (Num.div_num d e)
+      | _ -> assert false
+    end
+    in
+    Term (mk { tt_ty = Ty.Safe.real; tt_desc = TTconst (Treal s); })
 
   (* Array operations *)
   let get_array_type arr =
@@ -1073,7 +1174,8 @@ module Safe = struct
     if n <> m then
       raise (Wrong_type (t, tt_ty))
     else begin
-      Term (mk { tt_ty; tt_desc = TTapp (symb, [expect_term s; expect_term t]); })
+      Term
+        (mk { tt_ty; tt_desc = TTapp (symb, [expect_term s; expect_term t]); })
     end
 
   let bitv_binary_pred symb = fun s t ->
@@ -1123,8 +1225,74 @@ module Safe = struct
   let bvsgt = bitv_binary_pred (Symbols.name "bvsgt")
   let bvsge = bitv_binary_pred (Symbols.name "bvsge")
 
+  (* Arithmetic integers *)
+  module Int = struct
+    type nonrec t = t
+    let int s = int s
+    let neg i = apply Const.Int.sub [] [int "0";i]
+    let add i j = apply Const.Int.add [] [i;j]
+    let sub i j = apply Const.Int.sub [] [i;j]
+    let mul i j = apply Const.Int.mul [] [i;j]
+    let div i j = apply Const.Int.div [] [i;j]
+    let modulo i j = apply Const.Int.modulo [] [i;j]
+    let abs i = apply Const.Int.abs [] [i;]
+    let lt i j = apply Const.Int.lt [] [i;j]
+    let le i j = apply Const.Int.le [] [i;j]
+    let gt i j = apply Const.Int.lt [] [j;i]
+    let ge i j = apply Const.Int.le [] [j;i]
+    let divisible i j =
+      let n = apply Const.Int.modulo [] [j;int i] in
+      let zero = int "0" in
+      let f = Const.make Symbols.(Lit L_eq) [] [Ty.Safe.int; Ty.Safe.int]
+          Ty.Safe.prop
+      in
+      apply f [] [n;zero]
+  end
+
+  (* Arithmetic reals *)
+  module Real = struct
+    type nonrec t = t
+    let real s = real s
+    let neg i = apply Const.Real.sub [] [real "0";i]
+    let add i j = apply Const.Real.add [] [i;j]
+    let sub i j = apply Const.Real.sub [] [i;j]
+    let mul i j = apply Const.Real.mul [] [i;j]
+    let div i j = apply Const.Real.div [] [i;j]
+    let lt i j = apply Const.Real.lt [] [i;j]
+    let le i j = apply Const.Real.le [] [i;j]
+    let gt i j = apply Const.Real.lt [] [j;i]
+    let ge i j = apply Const.Real.le [] [j;i]
+  end
+
+  (* Arithmetic reals and integers *)
+  module Real_Int = struct
+    type nonrec t = t
+    type ty = Ty.t
+
+    let ty t = ty t
+
+    let int s = int s
+    let real s = real s
+
+    module Int = struct
+      include Int
+      let to_real i = apply Const.Int.to_real [] [i]
+    end
+
+    module Real = struct
+      include Real
+      let to_int i = apply Const.Real.to_int [] [i]
+
+      let is_int i =
+        let f = Const.make Symbols.(Lit L_eq) [] [Ty.Safe.real;Ty.Safe.real]
+            Ty.Safe.prop
+        in
+        apply f [] [i; Int.to_real (to_int i)]
+
+    end
+  end
+
   (* for compatibility purposes with dolmen *)
   let tag _ _ _ = ()
 
 end
-
