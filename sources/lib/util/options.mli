@@ -28,6 +28,9 @@
 
 val fmt : Format.formatter
 
+type model = MNone | MDefault | MAll | MComplete
+type output = Native | Smtlib | SZS
+
 (** setter functions **********************************************************)
 
 (** setters for debug flags *)
@@ -70,15 +73,13 @@ val set_no_user_triggers : bool -> unit
 val set_triggers_var : bool -> unit
 val set_nb_triggers : int -> unit
 val set_greedy : bool -> unit
-val set_no_Ematching : bool -> unit
-val set_no_NLA : bool -> unit
+val set_no_ematching : bool -> unit
+val set_no_nla : bool -> unit
 val set_no_ac : bool -> unit
 val set_normalize_instances : bool -> unit
-val set_nocontracongru : bool -> unit
+val set_no_contracongru : bool -> unit
 val set_term_like_pp : bool -> unit
-val set_all_models : bool -> unit
-val set_model : bool -> unit
-val set_complete_model : bool -> unit
+val set_model : model -> unit
 val set_interpretation : int -> unit
 val set_max_split : Numbers.Q.t -> unit
 val set_fm_cross_limit : Numbers.Q.t -> unit
@@ -93,7 +94,7 @@ val set_thread_yield : (unit -> unit) -> unit
 val set_timeout : (unit -> unit) -> unit
 val set_save_used_context : bool -> unit
 val set_default_input_lang : string -> unit
-val set_unsat_mode : bool -> unit
+val set_output_mode : output -> unit
 val set_inline_lets : bool -> unit
 
 (* updates the filename to be parsed and sets a js_mode flag *)
@@ -152,21 +153,21 @@ val nb_triggers : unit -> int
 val max_multi_triggers_size : unit -> int
 val verbose : unit -> bool
 val greedy : unit -> bool
-val no_Ematching : unit -> bool
+val no_ematching : unit -> bool
 val arith_matching : unit -> bool
 val no_backjumping : unit -> bool
-val no_NLA : unit -> bool
+val no_nla : unit -> bool
 val no_ac : unit -> bool
 val no_backward : unit -> bool
 val no_sat_learning : unit -> bool
 val sat_learning : unit -> bool
-val nocontracongru : unit -> bool
+val no_contracongru : unit -> bool
 val term_like_pp : unit -> bool
-val all_models : unit -> bool
 val model : unit -> bool
+val complete_model : unit -> bool
+val all_models : unit -> bool
 val interpretation : unit -> int
 val debug_interpretation : unit -> bool
-val complete_model : unit -> bool
 val max_split : unit -> Numbers.Q.t
 val fm_cross_limit : unit -> Numbers.Q.t
 val rewriting : unit -> bool
@@ -187,7 +188,10 @@ val instantiate_after_backjump : unit -> bool
 val disable_weaks : unit -> bool
 val default_input_lang : unit -> string
 val answers_with_locs  : unit -> bool
-val unsat_mode : unit -> bool
+val output_native : unit -> bool
+val output_smtlib : unit -> bool
+val output_szs : unit -> bool
+
 val inline_lets : unit -> bool
 
 (** this option also yields true if profiling is set to true **)
