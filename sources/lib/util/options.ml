@@ -98,7 +98,7 @@ let vrestricted = ref false
 let vbottom_classes = ref false
 let vtimelimit = ref 0.
 let vtimelimit_per_goal = ref false
-let vinterpretation_timelimit = ref (if Sys.win32 then 0. else 1.)
+let vtimelimit_interpretation = ref (if Sys.win32 then 0. else 1.)
 let vdebug_matching = ref 0
 let vdebug_explanations = ref false
 let vsat_plugin = ref ""
@@ -248,7 +248,7 @@ type limit_opt =
   {
     age_bound : int;
     fm_cross_limit : Numbers.Q.t;
-    interpretation_timelimit : float;
+    timelimit_interpretation : float;
     steps_bound : int;
     timelimit : float;
     timelimit_per_goal : bool;
@@ -395,7 +395,7 @@ let mk_internal_opt disable_weaks enable_assertions gc_policy
   in
   `Ok {disable_weaks; enable_assertions; gc_policy;}
 
-let mk_limit_opt age_bound fm_cross_limit interpretation_timelimit
+let mk_limit_opt age_bound fm_cross_limit timelimit_interpretation
     steps_bound timelimit timelimit_per_goal
   =
   let set_limit t d =
@@ -413,9 +413,9 @@ let mk_limit_opt age_bound fm_cross_limit interpretation_timelimit
   else
     let fm_cross_limit = Numbers.Q.from_string fm_cross_limit in
     let timelimit = set_limit timelimit !vtimelimit in
-    let interpretation_timelimit = set_limit interpretation_timelimit
-        !vinterpretation_timelimit in
-    `Ok { age_bound; fm_cross_limit; interpretation_timelimit;
+    let timelimit_interpretation = set_limit timelimit_interpretation
+        !vtimelimit_interpretation in
+    `Ok { age_bound; fm_cross_limit; timelimit_interpretation;
           steps_bound; timelimit; timelimit_per_goal; }
 
 let mk_output_opt interpretation model unsat_core output_format
@@ -609,7 +609,7 @@ let mk_opts file case_split_opt context_opt dbg_opt execution_opt _
   venable_assertions := internal_opt.enable_assertions;
   vage_bound := limit_opt.age_bound;
   vfm_cross_limit := limit_opt.fm_cross_limit;
-  vinterpretation_timelimit := limit_opt.interpretation_timelimit;
+  vtimelimit_interpretation := limit_opt.timelimit_interpretation;
   vsteps_bound := limit_opt.steps_bound;
   vtimelimit := limit_opt.timelimit;
   vtimelimit_per_goal := limit_opt.timelimit_per_goal;
@@ -1027,7 +1027,7 @@ let parse_limit_opt =
     let docv = "VAL" in
     Arg.(value & opt string dv & info ["fm-cross-limit"] ~docv ~docs ~doc) in
 
-  let interpretation_timelimit =
+  let timelimit_interpretation =
     let doc = "Set the time limit to $(docv) seconds for model generation \
                (not supported on Windows)." in
     let docv = "SEC" in
@@ -1054,7 +1054,7 @@ let parse_limit_opt =
     Arg.(value & flag & info ["timelimit-per-goal"] ~docs ~doc) in
 
   Term.(ret (const mk_limit_opt $
-             age_bound $ fm_cross_limit $ interpretation_timelimit $
+             age_bound $ fm_cross_limit $ timelimit_interpretation $
              steps_bound $ timelimit $ timelimit_per_goal
             ))
 
@@ -1397,7 +1397,7 @@ let main =
       `S s_case_split;
       `S s_halt;
       `S s_debug;
-       `S Manpage.s_bugs;
+      `S Manpage.s_bugs;
       `P "You can open an issue on: \
           https://github.com/OCamlPro/alt-ergo/issues";
       `Pre "Or you can write to: \n   alt-ergo@ocamlpro.com";
@@ -1596,7 +1596,7 @@ let restricted () = !vrestricted
 let bottom_classes () = !vbottom_classes
 let timelimit () = !vtimelimit
 let timelimit_per_goal () = !vtimelimit_per_goal
-let interpretation_timelimit () = !vinterpretation_timelimit
+let timelimit_interpretation () = !vtimelimit_interpretation
 let enable_assertions () = !venable_assertions
 let profiling () =  !vprofiling
 let profiling_period () = !vprofiling_period

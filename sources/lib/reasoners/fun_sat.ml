@@ -1164,12 +1164,12 @@ module Make (Th : Theory.S) : Sat_solver_sig.S = struct
     let i = abs (interpretation ()) in
     assert (i = 1 || i = 2 || i = 3);
     if not !(env.model_gen_mode) &&
-       Stdlib.(<>) (Options.interpretation_timelimit ()) 0. then
+       Stdlib.(<>) (Options.timelimit_interpretation ()) 0. then
       begin
         Options.Time.unset_timeout ~is_gui:(Options.get_is_gui());
         Options.Time.set_timeout
           ~is_gui:(Options.get_is_gui())
-          (Options.interpretation_timelimit ());
+          (Options.timelimit_interpretation ());
         env.model_gen_mode := true;
         return_answer env i (fun _ -> raise Util.Timeout)
       end

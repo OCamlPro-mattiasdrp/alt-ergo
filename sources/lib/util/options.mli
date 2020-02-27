@@ -177,7 +177,7 @@ val restricted : unit -> bool
 val bottom_classes : unit -> bool
 val timelimit : unit -> float
 val timelimit_per_goal : unit -> bool
-val interpretation_timelimit : unit -> float
+val timelimit_interpretation : unit -> float
 val profiling : unit -> bool
 val cumulative_time_profiling : unit -> bool
 val profiling_period : unit -> float
