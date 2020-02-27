@@ -31,9 +31,9 @@ val fmt : Format.formatter
 type model = MNone | MDefault | MAll | MComplete
 type output = Native | Smtlib | SZS
 
-(** setter functions **********************************************************)
+(** Setter functions *)
 
-(** setters for debug flags *)
+(** Setters for debug flags *)
 val set_debug : bool -> unit
 val set_debug_cc : bool -> unit
 val set_debug_gc : bool -> unit
@@ -60,7 +60,7 @@ val set_debug_explanations : bool -> unit
 val set_timers : bool -> unit
 val set_profiling : float -> bool -> unit
 
-(** additional setters *)
+(** Additional setters *)
 
 val set_type_only : bool -> unit
 val set_type_smt2 : bool -> unit
@@ -93,17 +93,17 @@ val set_thread_yield : (unit -> unit) -> unit
 
 val set_timeout : (unit -> unit) -> unit
 val set_save_used_context : bool -> unit
-val set_default_input_lang : string -> unit
-val set_output_mode : output -> unit
+val set_input_format : string -> unit
+val set_output_format : output -> unit
 val set_inline_lets : bool -> unit
 
 (* updates the filename to be parsed and sets a js_mode flag *)
 val set_file_for_js : string -> unit
 
 
-(** getter functions **********************************************************)
+(** Getter functions *)
 
-(** getters for debug flags *)
+(** Getters for debug flags *)
 val debug : unit -> bool
 val debug_warnings : unit -> bool
 val debug_cc : unit -> bool
@@ -131,7 +131,7 @@ val debug_matching : unit -> int
 val debug_explanations : unit -> bool
 val debug_triggers : unit -> bool
 
-(** additional getters *)
+(** Additional getters *)
 val enable_assertions : unit -> bool
 val disable_ites : unit -> bool
 val disable_adts : unit -> bool
@@ -186,15 +186,16 @@ val case_split_policy : unit -> Util.case_split_policy
 val preludes : unit -> string list
 val instantiate_after_backjump : unit -> bool
 val disable_weaks : unit -> bool
-val default_input_lang : unit -> string
+val input_format : unit -> string
 val answers_with_locs  : unit -> bool
 val output_native : unit -> bool
 val output_smtlib : unit -> bool
 val output_szs : unit -> bool
+val infer_output_format : unit -> bool
 
 val inline_lets : unit -> bool
 
-(** this option also yields true if profiling is set to true **)
+(** This option also yields true if profiling is set to true *)
 val timers : unit -> bool
 val replay : unit -> bool
 val replay_used_context : unit -> bool
@@ -220,13 +221,13 @@ val disable_flat_formulas_simplification : unit -> bool
 
 val use_fpa : unit -> bool
 
-(** particular getters : functions that are immediately executed **************)
+(** Particular getters : functions that are immediately executed *)
 val exec_thread_yield : unit -> unit
 val exec_timeout : unit -> unit
 
 val tool_req : int -> string -> unit
 
-(** Simple Timer module **)
+(** Simple Timer module *)
 module Time : sig
 
   val start : unit -> unit
@@ -237,12 +238,12 @@ module Time : sig
 
 end
 
-(** globals **)
+(** Globals *)
 
 val cs_steps : unit -> int
 val incr_cs_steps : unit -> unit
 
-(** open Options in every module to hide polymorphic versions of Stdlib **)
+(** Open Options in every module to hide polymorphic versions of Stdlib *)
 val (<>) : int -> int -> bool
 val (=) : int -> int -> bool
 val (<) : int -> int -> bool
@@ -255,7 +256,7 @@ val compare : int -> int -> int
 val can_decide_on : string -> bool
 val no_decisions_on__is_empty : unit -> bool
 
-(** extra **)
+(** Extra *)
 val set_is_gui : bool -> unit
 val get_is_gui : unit -> bool
 

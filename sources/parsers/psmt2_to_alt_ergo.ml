@@ -356,10 +356,8 @@ module Translate = struct
     | Cmd_Assert(assert_term) ->
       (translate_assert (pos command) assert_term) :: acc
     | Cmd_CheckEntailment(assert_term) ->
-      Options.set_output_mode Native;
       (translate_goal (pos command) assert_term) :: acc
     | Cmd_CheckSat ->
-      Options.set_output_mode Smtlib;
       (mk_goal (pos command) "g" (mk_false_const (pos command))) :: acc
     | Cmd_CheckSatAssum _ ->
       not_supported "check-sat-assuming"; assert false
