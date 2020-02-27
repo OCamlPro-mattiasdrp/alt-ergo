@@ -905,7 +905,7 @@ let parse_context_opt =
   let save_used_context =
     let doc = "Save used axioms and predicates in a $(i,.used) file. \
                This option implies $(b,--unsat-core)." in
-    Arg.(value & flag & info ["saved-used-context"] ~docs ~doc) in
+    Arg.(value & flag & info ["s"; "save-used-context"] ~doc) in
 
   Term.(ret (const mk_context_opt $
              replay $ replay_all_used_context $ replay_used_context $
@@ -926,8 +926,9 @@ let parse_execution_opt =
       "Set the default input format to $(docv). Useful when the extension \
        does not allow to automatically select a parser (eg. JS mode, GUI \
        mode, ...)." in
+    let docv = "FMT" in
     Arg.(value & opt string !vinput_format &
-         info ["i"; "input"] ~doc) in
+         info ["i"; "input"] ~docv ~doc) in
 
   let parse_only =
     let doc = "Stop after parsing." in
@@ -1037,7 +1038,7 @@ let parse_limit_opt =
     let doc = "Set the maximum number of steps." in
     let docv = "STEPS" in
     Arg.(value & opt int !vsteps_bound &
-         info ["s"; "steps-bound"] ~docv ~doc) in
+         info ["S"; "steps-bound"] ~docv ~doc) in
 
   let timelimit =
     let doc =
@@ -1383,20 +1384,20 @@ let main =
   let man =
     [
       `S Manpage.s_options;
-      `S s_debug;
-      `S s_case_split;
-      `S s_context;
       `S s_execution;
-      `S s_internal;
-      `S s_halt;
       `S s_limit;
+      `S s_internal;
       `S s_output;
+      `S s_context;
       `S s_profiling;
-      `S s_quantifiers;
       `S s_sat;
+      `S s_quantifiers;
       `S s_term;
       `S s_theory;
-      `S Manpage.s_bugs;
+      `S s_case_split;
+      `S s_halt;
+      `S s_debug;
+       `S Manpage.s_bugs;
       `P "You can open an issue on: \
           https://github.com/OCamlPro/alt-ergo/issues";
       `Pre "Or you can write to: \n   alt-ergo@ocamlpro.com";

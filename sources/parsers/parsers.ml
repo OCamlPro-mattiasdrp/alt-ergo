@@ -135,7 +135,7 @@ let parse_input_file file =
        match ext with
        | ".smt2" | ".psmt2" -> Options.set_output_format Smtlib
        | ".why" | ".mlw" | ".ae" -> Options.set_output_format Native
-       | _ -> ()
+       | _ -> Format.eprintf "Warning: This extension is not supported@."
     );
     let ext = if String.equal ext "" then None else Some ext in
     let a = parse_file ?lang:ext lb in
