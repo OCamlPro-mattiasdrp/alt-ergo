@@ -34,119 +34,119 @@ exception Error of bool * string
 (* Declaration of all the options as refs with default values *)
 
 type model = MNone | MDefault | MAll | MComplete
-
-let vtimers = ref false
-
-let vfile = ref ""
-let vsession_file = ref ""
-let vused_context_file = ref ""
-let vrewriting = ref false
-let vtype_only = ref false
-let vtype_smt2 = ref false
-let vparse_only = ref false
-let vfrontend = ref "legacy"
-let vsteps_bound = ref (-1)
-let vage_bound = ref 50
-let vdebug = ref false
-let vdebug_warnings = ref false
-let vno_user_triggers = ref false
-let vdebug_triggers = ref false
-let vdebug_cc = ref false
-let vdebug_gc = ref false
-let vdebug_use = ref false
-let vdebug_arrays = ref false
-let vdebug_ite = ref false
-let vdebug_uf = ref false
-let vdebug_sat = ref false
-let vdebug_sat_simple = ref false
-let vdebug_typing = ref false
-let vdebug_constr = ref false
-let vverbose = ref false
-let vdebug_fm = ref false
-let vdebug_fpa = ref 0
-let vdebug_sum = ref false
-let vdebug_adt = ref false
-let vdebug_arith = ref false
-let vdebug_combine = ref false
-let vdebug_bitv = ref false
-let vdebug_ac = ref false
-let vdebug_split = ref false
-let vgreedy = ref false
-let vdisable_ites = ref false
-let vdisable_adts = ref false
-let venable_adts_cs = ref false
-let vtriggers_var = ref false
-let vnb_triggers = ref 2
-let vmax_multi_triggers_size = ref 4
-let venable_assertions = ref false
-let vno_ematching = ref false
-let varith_matching = ref true
-let vno_backjumping = ref false
-let vno_contracongru = ref false
-let vterm_like_pp = ref true
-let vdebug_types = ref false
-let vmodel = ref MNone
-let vinterpretation = ref 0
-let vdebug_interpretation = ref false
-let vunsat_core = ref false
-let vdebug_unsat_core = ref false
-let vrules = ref (-1)
-let vmax_split = ref (Numbers.Q.from_int 1000000)
-let vfm_cross_limit = ref (Numbers.Q.from_int 10_000)
-let vcase_split_policy = ref Util.AfterTheoryAssume
-let vrestricted = ref false
-let vbottom_classes = ref false
-let vtimelimit = ref 0.
-let vtimelimit_per_goal = ref false
-let vtimelimit_interpretation = ref (if Sys.win32 then 0. else 1.)
-let vdebug_matching = ref 0
-let vdebug_explanations = ref false
-let vsat_plugin = ref ""
-let vparsers = ref []
-let vinequalities_plugin = ref ""
-let vprofiling_plugin = ref ""
-let vcumulative_time_profiling = ref false
-let vnormalize_instances = ref false
-
-let vsat_solver = ref Util.CDCL_Tableaux
-let vcdcl_tableaux_inst = ref true
-let vcdcl_tableaux_th = ref true
-let vtableaux_cdcl = ref false
-let vminimal_bj = ref true
-let venable_restarts = ref false
-let vdisable_flat_formulas_simplification = ref false
-
-let vtighten_vars = ref false
-let vno_tcp = ref false
-let vno_decisions = ref false
-
-let vno_decisions_on = ref Util.SS.empty
-let vno_fm = ref false
-let vno_theory = ref false
-let vjs_mode = ref false
-let vuse_fpa = ref false
-let vpreludes : string list ref = ref []
-let vno_nla = ref false
-let vno_ac = ref false
-let vno_backward = ref false
-let vno_sat_learning = ref false
-let vinst_after_bj = ref false
-let vdisable_weaks = ref false
-let vinput_format = ref "why"
-let vanswers_with_loc = ref true
-
 type output = Native | Smtlib | SZS
-let vinfer_output_format = ref true
-let voutput_format = ref Native
-let vinline_lets = ref false
 
-let vreplay = ref false
-let vreplay_used_context = ref false
-let vreplay_all_used_context = ref false
-let vsave_used_context = ref false
+(* let vtimers = ref false *)
 
-let vprofiling_period = ref 0.
-let vprofiling = ref false
+(* let vfile = ref "" *)
+(* let vsession_file = ref "" *)
+(* let vused_context_file = ref "" *)
+(* let vrewriting = ref false *)
+(* let vtype_only = ref false *)
+(* let vtype_smt2 = ref false *)
+(* let vparse_only = ref false *)
+(* let vfrontend = ref "legacy" *)
+(* let vsteps_bound = ref (-1) *)
+(* let vage_bound = ref 50 *)
+(* let vdebug = ref false *)
+(* let vdebug_warnings = ref false *)
+(* let vno_user_triggers = ref false *)
+(* let vdebug_triggers = ref false *)
+(* let vdebug_cc = ref false *)
+(* let vdebug_gc = ref false *)
+(* let vdebug_use = ref false *)
+(* let vdebug_arrays = ref false *)
+(* let vdebug_ite = ref false *)
+(* let vdebug_uf = ref false *)
+(* let vdebug_sat = ref false *)
+(* let vdebug_sat_simple = ref false *)
+(* let vdebug_typing = ref false *)
+(* let vdebug_constr = ref false *)
+(* let vverbose = ref false *)
+(* let vdebug_fm = ref false *)
+(* let vdebug_fpa = ref 0 *)
+(* let vdebug_sum = ref false *)
+(* let vdebug_adt = ref false *)
+(* let vdebug_arith = ref false *)
+(* let vdebug_combine = ref false *)
+(* let vdebug_bitv = ref false *)
+(* let vdebug_ac = ref false *)
+(* let vdebug_split = ref false *)
+(* let vgreedy = ref false *)
+(* let vdisable_ites = ref false *)
+(* let vdisable_adts = ref false *)
+(* let venable_adts_cs = ref false *)
+(* let vtriggers_var = ref false *)
+(* let vnb_triggers = ref 2 *)
+(* let vmax_multi_triggers_size = ref 4 *)
+(* let venable_assertions = ref false *)
+(* let vno_ematching = ref false *)
+(* let varith_matching = ref true *)
+(* let vno_backjumping = ref false *)
+(* let vno_contracongru = ref false *)
+(* let vterm_like_pp = ref true *)
+(* let vdebug_types = ref false *)
+(* let vmodel = ref MNone *)
+(* let vinterpretation = ref 0 *)
+(* let vdebug_interpretation = ref false *)
+(* let vunsat_core = ref false *)
+(* let vdebug_unsat_core = ref false *)
+(* let vrules = ref (-1) *)
+(* let vmax_split = ref (Numbers.Q.from_int 1000000) *)
+(* let vfm_cross_limit = ref (Numbers.Q.from_int 10_000) *)
+(* let vcase_split_policy = ref Util.AfterTheoryAssume *)
+(* let vrestricted = ref false *)
+(* let vbottom_classes = ref false *)
+(* let vtimelimit = ref 0. *)
+(* let vtimelimit_per_goal = ref false *)
+(* let vtimelimit_interpretation = ref (if Sys.win32 then 0. else 1.) *)
+(* let vdebug_matching = ref 0 *)
+(* let vdebug_explanations = ref false *)
+(* let vsat_plugin = ref "" *)
+(* let vparsers = ref [] *)
+(* let vinequalities_plugin = ref "" *)
+(* let vprofiling_plugin = ref "" *)
+(* let vcumulative_time_profiling = ref false *)
+(* let vnormalize_instances = ref false *)
+
+(* let vsat_solver = ref Util.CDCL_Tableaux *)
+(* let vcdcl_tableaux_inst = ref true *)
+(* let vcdcl_tableaux_th = ref true *)
+(* let vtableaux_cdcl = ref false *)
+(* let vminimal_bj = ref true *)
+(* let venable_restarts = ref false *)
+(* let vdisable_flat_formulas_simplification = ref false *)
+
+(* let vtighten_vars = ref false *)
+(* let vno_tcp = ref false *)
+(* let vno_decisions = ref false *)
+
+(* let vno_decisions_on = ref Util.SS.empty *)
+(* let vno_fm = ref false *)
+(* let vno_theory = ref false *)
+(* let vjs_mode = ref false *)
+(* let vuse_fpa = ref false *)
+(* let vpreludes : string list ref = ref [] *)
+(* let vno_nla = ref false *)
+(* let vno_ac = ref false *)
+(* let vno_backward = ref false *)
+(* let vno_sat_learning = ref false *)
+(* let vinst_after_bj = ref false *)
+(* let vdisable_weaks = ref false *)
+(* let vinput_format = ref "why" *)
+(* let vanswers_with_loc = ref true *)
+
+(* let vinfer_output_format = ref true *)
+(* let voutput_format = ref Native *)
+(* let vinline_lets = ref false *)
+
+(* let vreplay = ref false *)
+(* let vreplay_used_context = ref false *)
+(* let vreplay_all_used_context = ref false *)
+(* let vsave_used_context = ref false *)
+
+(* let vprofiling_period = ref 0. *)
+(* let vprofiling = ref false *)
 
 
 (* We don't want to handle functions with more than 10 arguments so
@@ -257,9 +257,10 @@ type limit_opt =
 type output_opt =
   {
     interpretation : int;
+    infer_output_format : bool;
     model : model;
-    unsat_core : bool;
     output_format : output;
+    unsat_core : bool;
   }
 
 type profiling_opt =
@@ -395,6 +396,10 @@ let mk_internal_opt disable_weaks enable_assertions gc_policy
   in
   `Ok {disable_weaks; enable_assertions; gc_policy;}
 
+let dft_timelimit = 0.
+let dft_timelimit_interpretation = if Sys.win32 then 0. else 1.
+
+
 let mk_limit_opt age_bound fm_cross_limit timelimit_interpretation
     steps_bound timelimit timelimit_per_goal
   =
@@ -412,13 +417,13 @@ let mk_limit_opt age_bound fm_cross_limit timelimit_interpretation
     `Error (false, "--steps-bound argument should be positive")
   else
     let fm_cross_limit = Numbers.Q.from_string fm_cross_limit in
-    let timelimit = set_limit timelimit !vtimelimit in
+    let timelimit = set_limit timelimit dft_timelimit in
     let timelimit_interpretation = set_limit timelimit_interpretation
-        !vtimelimit_interpretation in
+        dft_timelimit_interpretation in
     `Ok { age_bound; fm_cross_limit; timelimit_interpretation;
           steps_bound; timelimit; timelimit_per_goal; }
 
-let mk_output_opt interpretation model unsat_core output_format
+let mk_output_opt interpretation model output_format unsat_core
   =
   let model = match model with
     | "none" -> MNone
@@ -429,8 +434,8 @@ let mk_output_opt interpretation model unsat_core output_format
       let m = "Option --model does not accept the argument \"" ^ model in
       raise (Error (false, m))
   in
-  vinfer_output_format :=
-    (match output_format with Some _ -> false | None -> true);
+  let infer_output_format =
+    match output_format with Some _ -> false | None -> true in
   let output_format = match output_format with
     | None | Some "native" -> Native
     | Some "smtlib" -> Smtlib
@@ -439,7 +444,7 @@ let mk_output_opt interpretation model unsat_core output_format
       let m = "Option --output does not accept the argument \"" ^ fmt in
       raise (Error (false, m))
   in
-  `Ok { interpretation; model; unsat_core; output_format; }
+  `Ok { interpretation; model; infer_output_format; output_format; unsat_core; }
 
 let mk_profiling_opt cumulative_time_profiling profiling
     profiling_plugin verbose
@@ -548,119 +553,18 @@ let mk_opts file case_split_opt context_opt dbg_opt execution_opt _
 
   (* If save_used_context was invoked as an option it should
      automatically set unsat_core to true *)
-  let output_opt = if context_opt.save_used_context then
+  let output_opt = if context_opt.save_used_context ||
+    debug.debug_spt3.debug_unsat_core then
       { output_opt with unsat_core = true} else output_opt in
 
-  (match file with
-   | Some f ->
-     vfile := f;
-     let base_file = Filename.chop_extension f in
-     vsession_file := base_file^".agr";
-     vused_context_file := base_file;
-   | _ -> ()
-  );
+  let file, session_file, used_context_file = match file with
+    | Some f ->
+      let base_file = Filename.chop_extension f in
+      f, base_file^".agr", base_file
+    | _ -> "", "", ""
+  in
 
   Gc.set { (Gc.get()) with Gc.allocation_policy = internal_opt.gc_policy };
-
-  vdebug := dbg_opt.dbg_opt_spl1.debug;
-  vdebug_ac := dbg_opt.dbg_opt_spl1.debug_ac;
-  vdebug_adt := dbg_opt.dbg_opt_spl1.debug_adt;
-  vdebug_arith := dbg_opt.dbg_opt_spl1.debug_arith;
-  vdebug_arrays := dbg_opt.dbg_opt_spl1.debug_arrays;
-  vdebug_bitv := dbg_opt.dbg_opt_spl1.debug_bitv;
-  vdebug_cc := dbg_opt.dbg_opt_spl1.debug_cc;
-  vdebug_combine := dbg_opt.dbg_opt_spl1.debug_combine;
-  vdebug_constr := dbg_opt.dbg_opt_spl1.debug_constr;
-  vdebug_explanations := dbg_opt.dbg_opt_spl2.debug_explanations;
-  vdebug_fm := dbg_opt.dbg_opt_spl2.debug_fm;
-  vdebug_fpa := dbg_opt.dbg_opt_spl2.debug_fpa;
-  vdebug_gc := dbg_opt.dbg_opt_spl2.debug_gc;
-  vdebug_interpretation := dbg_opt.dbg_opt_spl2.debug_interpretation;
-  vdebug_ite := dbg_opt.dbg_opt_spl2.debug_ite;
-  vdebug_matching := dbg_opt.dbg_opt_spl2.debug_matching;
-  vdebug_sat := dbg_opt.dbg_opt_spl2.debug_sat;
-  vdebug_sat_simple := dbg_opt.dbg_opt_spl2.debug_sat_simple;
-  vdebug_split := dbg_opt.dbg_opt_spl3.debug_split;
-  vdebug_sum := dbg_opt.dbg_opt_spl3.debug_sum;
-  vdebug_triggers := dbg_opt.dbg_opt_spl3.debug_triggers;
-  vdebug_types := dbg_opt.dbg_opt_spl3.debug_types;
-  vdebug_typing := dbg_opt.dbg_opt_spl3.debug_typing;
-  vdebug_uf := dbg_opt.dbg_opt_spl3.debug_uf;
-  vdebug_unsat_core := dbg_opt.dbg_opt_spl3.debug_unsat_core;
-  vdebug_use := dbg_opt.dbg_opt_spl3.debug_use;
-  vdebug_warnings := dbg_opt.dbg_opt_spl3.debug_warnings;
-  vrules := dbg_opt.dbg_opt_spl3.rules;
-  vcase_split_policy := case_split_opt.case_split_policy;
-  venable_adts_cs := case_split_opt.enable_adts_cs;
-  vmax_split := case_split_opt.max_split;
-  vreplay := context_opt.replay;
-  vreplay_all_used_context := context_opt.replay_all_used_context;
-  vreplay_used_context := context_opt.replay_used_context;
-  vsave_used_context := context_opt.save_used_context;
-  vinput_format := execution_opt.input_format;
-  vfrontend := execution_opt.frontend;
-  vanswers_with_loc := execution_opt.answers_with_loc;
-  vparse_only := execution_opt.parse_only;
-  vparsers := execution_opt.parsers;
-  vpreludes := execution_opt.preludes;
-  vtype_only := execution_opt.type_only;
-  vtype_smt2 := execution_opt .type_smt2;
-  vdisable_weaks := internal_opt.disable_weaks;
-  venable_assertions := internal_opt.enable_assertions;
-  vage_bound := limit_opt.age_bound;
-  vfm_cross_limit := limit_opt.fm_cross_limit;
-  vtimelimit_interpretation := limit_opt.timelimit_interpretation;
-  vsteps_bound := limit_opt.steps_bound;
-  vtimelimit := limit_opt.timelimit;
-  vtimelimit_per_goal := limit_opt.timelimit_per_goal;
-  vinterpretation := output_opt.interpretation;
-  vmodel := output_opt.model;
-  vunsat_core := output_opt.unsat_core;
-  voutput_format := output_opt.output_format;
-  vcumulative_time_profiling := profiling_opt.cumulative_time_profiling;
-  vprofiling := profiling_opt.profiling;
-  vprofiling_period := profiling_opt.profiling_period;
-  vprofiling_plugin := profiling_opt.profiling_plugin;
-  vverbose := profiling_opt.verbose;
-  vgreedy := quantifiers_opt.greedy;
-  vinst_after_bj := quantifiers_opt.inst_after_bj;
-  vmax_multi_triggers_size := quantifiers_opt.max_multi_triggers_size;
-  vnb_triggers := quantifiers_opt.nb_triggers;
-  vno_ematching := quantifiers_opt.no_ematching;
-  vno_user_triggers := quantifiers_opt.no_user_triggers;
-  vnormalize_instances := quantifiers_opt.normalize_instances;
-  vtriggers_var := quantifiers_opt.triggers_var;
-  varith_matching := sat_opt.arith_matching;
-  vbottom_classes := sat_opt.bottom_classes;
-  vdisable_flat_formulas_simplification :=
-    sat_opt.disable_flat_formulas_simplification;
-  venable_restarts := sat_opt.enable_restarts;
-  vno_backjumping := sat_opt.no_backjumping;
-  vno_backward := sat_opt.no_backward;
-  vno_decisions := sat_opt.no_decisions;
-  vno_decisions_on := sat_opt.no_decisions_on;
-  vminimal_bj := sat_opt.minimal_bj;
-  vno_sat_learning := sat_opt.no_sat_learning;
-  vcdcl_tableaux_inst := sat_opt.cdcl_tableaux_inst;
-  vcdcl_tableaux_th := sat_opt.cdcl_tableaux_th;
-  vsat_plugin := sat_opt.sat_plugin;
-  vsat_solver := sat_opt.sat_solver;
-  vtableaux_cdcl := sat_opt.tableaux_cdcl;
-  vdisable_ites := term_opt.disable_ites;
-  vinline_lets := term_opt.inline_lets;
-  vrewriting := term_opt.rewriting;
-  vterm_like_pp := term_opt.term_like_pp;
-  vdisable_adts := theory_opt.disable_adts;
-  vinequalities_plugin := theory_opt.inequalities_plugin;
-  vno_ac := theory_opt.no_ac;
-  vno_contracongru := theory_opt.no_contracongru;
-  vno_fm := theory_opt.no_fm;
-  vno_nla := theory_opt.no_nla;
-  vno_tcp := theory_opt.no_tcp;
-  vno_theory := theory_opt.no_theory;
-  vrestricted := theory_opt.restricted;
-  vtighten_vars := theory_opt.tighten_vars;
-  vuse_fpa := theory_opt.use_fpa;
   `Ok ()
 
 (* Custom sections *)
@@ -747,7 +651,7 @@ let parse_dbg_opt_spl2 =
 
   let debug_fpa =
     let doc = "Set the debugging flag of floating-point." in
-    Arg.(value & opt int !vdebug_fpa & info ["dfpa"] ~docs ~doc) in
+    Arg.(value & opt int 0 & info ["dfpa"] ~docs ~doc) in
 
   let debug_gc =
     let doc = "Prints some debug info about the GC's activity." in
@@ -765,7 +669,7 @@ let parse_dbg_opt_spl2 =
     let doc = "Set the debugging flag \
                of E-matching (0=disabled, 1=light, 2=full)." in
     let docv = "FLAG" in
-    Arg.(value & opt int !vdebug_matching &
+    Arg.(value & opt int 0 &
          info ["dmatching"] ~docv ~docs ~doc) in
 
   let debug_sat =
@@ -876,7 +780,7 @@ let parse_case_split_opt =
     Arg.(value & flag & info ["enable-adts-cs"] ~docs ~doc) in
 
   let max_split =
-    let dv = Numbers.Q.to_string !vmax_split in
+    let dv = Numbers.Q.to_string (Numbers.Q.from_int 1000000) in
     let doc =
       Format.sprintf "Maximum size of case-split." in
     let docv = "VAL" in
@@ -919,7 +823,7 @@ let parse_execution_opt =
   let frontend =
     let doc = "Select the parsing and typing frontend." in
     let docv = "FTD" in
-    Arg.(value & opt string !vfrontend & info ["frontend"] ~docv ~docs ~doc) in
+    Arg.(value & opt string "legacy" & info ["frontend"] ~docv ~docs ~doc) in
 
   let input_format =
     let doc =
@@ -927,7 +831,7 @@ let parse_execution_opt =
        does not allow to automatically select a parser (eg. JS mode, GUI \
        mode, ...)." in
     let docv = "FMT" in
-    Arg.(value & opt string !vinput_format &
+    Arg.(value & opt string "why" &
          info ["i"; "input"] ~docv ~doc) in
 
   let parse_only =
@@ -936,13 +840,13 @@ let parse_execution_opt =
 
   let parsers =
     let doc = "Register a new parser for Alt-Ergo." in
-    Arg.(value & opt_all string !vparsers & info ["add-parser"] ~docs ~doc) in
+    Arg.(value & opt_all string [] & info ["add-parser"] ~docs ~doc) in
 
   let preludes =
     let doc =
       "Add a file that will be loaded as a prelude. The command is \
        cumulative, and the order of successive preludes is preserved." in
-    Arg.(value & opt_all string !vpreludes & info ["prelude"] ~docs ~doc) in
+    Arg.(value & opt_all string [] & info ["prelude"] ~docs ~doc) in
 
   let no_locs_in_answers =
     let doc =
@@ -1015,11 +919,11 @@ let parse_limit_opt =
   let age_bound =
     let doc = "Set the age limit bound." in
     let docv = "AGE" in
-    Arg.(value & opt int !vage_bound & info ["age-bound"] ~docv ~docs ~doc) in
+    Arg.(value & opt int 50 & info ["age-bound"] ~docv ~docs ~doc) in
 
   let fm_cross_limit =
     (* TODO : Link this to Alt-Ergo numbers *)
-    let dv = Numbers.Q.to_string !vfm_cross_limit in
+    let dv = Numbers.Q.to_string (Numbers.Q.from_int 10_000) in
     let doc = Format.sprintf
         "Skip Fourier-Motzkin variables elimination steps that may produce \
          a number of inequalities that is greater than the given limit. \
@@ -1037,7 +941,7 @@ let parse_limit_opt =
   let steps_bound =
     let doc = "Set the maximum number of steps." in
     let docv = "STEPS" in
-    Arg.(value & opt int !vsteps_bound &
+    Arg.(value & opt int (-1) &
          info ["S"; "steps-bound"] ~docv ~doc) in
 
   let timelimit =
@@ -1071,7 +975,7 @@ let parse_output_opt =
        interpretation display. Note that $(b, --max-split) limitation will \
        be ignored in model generation phase." in
     let docv = "VAL" in
-    Arg.(value & opt int !vinterpretation &
+    Arg.(value & opt int 0 &
          info ["interpretation"] ~docv ~docs ~doc) in
 
   let model =
@@ -1099,7 +1003,7 @@ let parse_output_opt =
     Arg.(value & opt (some string) None & info ["o"; "output"] ~docv ~doc) in
 
   Term.(ret (const mk_output_opt $
-             interpretation $ model $ unsat_core $ output_format
+             interpretation $ model $ output_format $ unsat_core
             ))
 
 let parse_profiling_opt =
@@ -1122,7 +1026,7 @@ let parse_profiling_opt =
   let profiling_plugin =
     let doc = "Use the given profiling plugin." in
     let docv = "PGN" in
-    Arg.(value & opt string !vprofiling_plugin &
+    Arg.(value & opt string "" &
          info ["profiling-plugin"] ~docv ~docs ~doc) in
 
   let verbose =
@@ -1150,13 +1054,13 @@ let parse_quantifiers_opt =
   let max_multi_triggers_size =
     let doc = "Max number of terms allowed in multi-triggers." in
     let docv = "VAL" in
-    Arg.(value & opt int !vmax_multi_triggers_size &
+    Arg.(value & opt int 4 &
          info ["max-multi-triggers-size"] ~docv ~docs ~doc) in
 
   let nb_triggers =
     let doc = "Number of (multi)triggers." in
     let docv = "VAL" in
-    Arg.(value & opt int !vnb_triggers &
+    Arg.(value & opt int 2 &
          info ["nb-triggers"] ~docv ~docs ~doc) in
 
   let no_ematching =
@@ -1254,7 +1158,7 @@ let parse_sat_opt =
   let sat_plugin =
     let doc =
       "Use the given SAT-solver instead of the default DFS-based SAT solver." in
-    Arg.(value & opt string !vsat_plugin & info ["sat-plugin"] ~docs ~doc) in
+    Arg.(value & opt string "" & info ["sat-plugin"] ~docs ~doc) in
 
   let sat_solver =
     let doc = Format.sprintf
@@ -1314,8 +1218,7 @@ let parse_theory_opt =
   let inequalities_plugin =
     let doc =
       "Use the given module to handle inequalities of linear arithmetic." in
-    Arg.(value & opt string !vinequalities_plugin &
-         info ["inequalities-plugin"] ~docs ~doc) in
+    Arg.(value & opt string "" & info ["inequalities-plugin"] ~docs ~doc) in
 
   let no_ac =
     let doc = "Disable the AC theory of Associative and \
@@ -1431,6 +1334,107 @@ let parse_cmdline_arguments () =
   match r with
   | `Ok () -> ()
   | e -> exit @@ Term.(exit_status_of_result e)
+
+let vdebug = ref opt.dbg_opt.dbg_opt_spl1.debug
+let vdebug_ac = ref opt.dbg_opt.dbg_opt_spl1.debug_ac
+let vdebug_adt = ref opt.dbg_opt.dbg_opt_spl1.debug_adt
+let vdebug_arith = ref opt.dbg_opt.dbg_opt_spl1.debug_arith
+let vdebug_arrays = ref opt.dbg_opt.dbg_opt_spl1.debug_arrays
+let vdebug_bitv = ref opt.dbg_opt.dbg_opt_spl1.debug_bitv
+let vdebug_cc = ref opt.dbg_opt.dbg_opt_spl1.debug_cc
+let vdebug_combine = ref opt.dbg_opt.dbg_opt_spl1.debug_combine
+let vdebug_constr = ref opt.dbg_opt.dbg_opt_spl1.debug_constr
+let vdebug_explanations = ref opt.dbg_opt.dbg_opt_spl2.debug_explanations
+let vdebug_fm = ref opt.dbg_opt.dbg_opt_spl2.debug_fm
+let vdebug_fpa = ref opt.dbg_opt.dbg_opt_spl2.debug_fpa
+let vdebug_gc = ref opt.dbg_opt.dbg_opt_spl2.debug_gc
+let vdebug_interpretation = ref opt.dbg_opt.dbg_opt_spl2.debug_interpretation
+let vdebug_ite = ref opt.dbg_opt.dbg_opt_spl2.debug_ite
+let vdebug_matching = ref opt.dbg_opt.dbg_opt_spl2.debug_matching
+let vdebug_sat = ref opt.dbg_opt.dbg_opt_spl2.debug_sat
+let vdebug_sat_simple = ref opt.dbg_opt.dbg_opt_spl2.debug_sat_simple
+let vdebug_split = ref opt.dbg_opt.dbg_opt_spl3.debug_split
+let vdebug_sum = ref opt.dbg_opt.dbg_opt_spl3.debug_sum
+let vdebug_triggers = ref opt.dbg_opt.dbg_opt_spl3.debug_triggers
+let vdebug_types = ref opt.dbg_opt.dbg_opt_spl3.debug_types
+let vdebug_typing = ref opt.dbg_opt.dbg_opt_spl3.debug_typing
+let vdebug_uf = ref opt.dbg_opt.dbg_opt_spl3.debug_uf
+let vdebug_unsat_core = ref opt.dbg_opt.dbg_opt_spl3.debug_unsat_core
+let vdebug_use = ref opt.dbg_opt.dbg_opt_spl3.debug_use
+let vdebug_warnings = ref opt.dbg_opt.dbg_opt_spl3.debug_warnings
+let vrules = ref opt.dbg_opt.dbg_opt_spl3.rules
+let vcase_split_policy = ref opt.case_split_opt.case_split_policy
+let venable_adts_cs = ref opt.case_split_opt.enable_adts_cs
+let vmax_split = ref opt.case_split_opt.max_split
+let vreplay = ref opt.context_opt.replay
+let vreplay_all_used_context = ref opt.context_opt.replay_all_used_context
+let vreplay_used_context = ref opt.context_opt.replay_used_context
+let vsave_used_context = ref opt.context_opt.save_used_context
+let vinput_format = ref opt.execution_opt.input_format
+let vfrontend = ref opt.execution_opt.frontend
+let vanswers_with_loc = ref opt.execution_opt.answers_with_loc
+let vparse_only = ref opt.execution_opt.parse_only
+let vparsers = ref opt.execution_opt.parsers
+let vpreludes = ref opt.execution_opt.preludes
+let vtype_only = ref opt.execution_opt.type_only
+let vtype_smt2 = ref opt.execution_opt .type_smt2
+let vdisable_weaks = ref opt.internal_opt.disable_weaks
+let venable_assertions = ref opt.internal_opt.enable_assertions
+let vage_bound = ref opt.limit_opt.age_bound
+let vfm_cross_limit = ref opt.limit_opt.fm_cross_limit
+let vtimelimit_interpretation = ref opt.limit_opt.timelimit_interpretation
+let vsteps_bound = ref opt.limit_opt.steps_bound
+let vtimelimit = ref opt.limit_opt.timelimit
+let vtimelimit_per_goal = ref opt.limit_opt.timelimit_per_goal
+let vinterpretation = ref opt.output_opt.interpretation
+let vmodel = ref opt.output_opt.model
+let vunsat_core = ref opt.output_opt.unsat_core
+let voutput_format = ref opt.output_opt.output_format
+let vcumulative_time_profiling = ref opt.profiling_opt.cumulative_time_profiling
+let vprofiling = ref opt.profiling_opt.profiling
+let vprofiling_period = ref opt.profiling_opt.profiling_period
+let vprofiling_plugin = ref opt.profiling_opt.profiling_plugin
+let vverbose = ref opt.profiling_opt.verbose
+let vgreedy = ref opt.quantifiers_opt.greedy
+let vinst_after_bj = ref opt.quantifiers_opt.inst_after_bj
+let vmax_multi_triggers_size = ref opt.quantifiers_opt.max_multi_triggers_size
+let vnb_triggers = ref opt.quantifiers_opt.nb_triggers
+let vno_ematching = ref opt.quantifiers_opt.no_ematching
+let vno_user_triggers = ref opt.quantifiers_opt.no_user_triggers
+let vnormalize_instances = ref opt.quantifiers_opt.normalize_instances
+let vtriggers_var = ref opt.quantifiers_opt.triggers_var
+let varith_matching = ref opt.sat_opt.arith_matching
+let vbottom_classes = ref opt.sat_opt.bottom_classes
+let vdisable_flat_formulas_simplification = ref
+    sat_opt.disable_flat_formulas_simplification
+let venable_restarts = ref opt.sat_opt.enable_restarts
+let vno_backjumping = ref opt.sat_opt.no_backjumping
+let vno_backward = ref opt.sat_opt.no_backward
+let vno_decisions = ref opt.sat_opt.no_decisions
+let vno_decisions_on = ref opt.sat_opt.no_decisions_on
+let vminimal_bj = ref opt.sat_opt.minimal_bj
+let vno_sat_learning = ref opt.sat_opt.no_sat_learning
+let vcdcl_tableaux_inst = ref opt.sat_opt.cdcl_tableaux_inst
+let vcdcl_tableaux_th = ref opt.sat_opt.cdcl_tableaux_th
+let vsat_plugin = ref opt.sat_opt.sat_plugin
+let vsat_solver = ref opt.sat_opt.sat_solver
+let vtableaux_cdcl = ref opt.sat_opt.tableaux_cdcl
+let vdisable_ites = ref opt.term_opt.disable_ites
+let vinline_lets = ref opt.term_opt.inline_lets
+let vrewriting = ref opt.term_opt.rewriting
+let vterm_like_pp = ref opt.term_opt.term_like_pp
+let vdisable_adts = ref opt.theory_opt.disable_adts
+let vinequalities_plugin = ref opt.theory_opt.inequalities_plugin
+let vno_ac = ref opt.theory_opt.no_ac
+let vno_contracongru = ref opt.theory_opt.no_contracongru
+let vno_fm = ref opt.theory_opt.no_fm
+let vno_nla = ref opt.theory_opt.no_nla
+let vno_tcp = ref opt.theory_opt.no_tcp
+let vno_theory = ref opt.theory_opt.no_theory
+let vrestricted = ref opt.theory_opt.restricted
+let vtighten_vars = ref opt.theory_opt.tighten_vars
+let vuse_fpa = ref opt.theory_opt.use_fpa
+
 
 let set_file_for_js filename =
   vfile := filename;
